@@ -34,35 +34,43 @@ public class JDBCApplication {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/petclinic", "root", "root");
 			if (connection != null)
 				System.out.println("Conexión establecida");
-
-			System.out.println("-----INSERTAR OWNER------");
+			
+            System.out.println("==============");
+            System.out.println("INSERTAR OWNER");
+            System.out.println("==============");
 
 			/*
 			 * String sql1 =
 			 * "INSERT INTO owners (first_name, last_name, address, city, telephone) VALUES ('Bartolome', 'MD', 'Calle X', 'Sevilla', '60000000')"
 			 * ; ResultSet rs1 = statement.executeQuery(sql1); statement.execute(sql1);
 			 */
-
-			System.out.println("-----INSERTAR PETS------");
+			System.out.println("==============");
+            System.out.println("INSERTAR PET");
+            System.out.println("==============");
 			/*
 			 * String sql2 =
 			 * "INSERT INTO pets (name, birth_date, type_id, owner_id) VALUES ('Rocky', '2010-01-02', '1', '11')"
 			 * ; ResultSet rs2 = statement.executeQuery(sql2); statement.execute(sql2);
 			 */
 
-			System.out.println("-----CAMBIANDO CIUDAD------");
-			// String sql3 = "SELECT * FROM owners WHERE id=?";
-			PreparedStatement preparedStatement3 = connection.prepareStatement("UPDATE owners SET city=? WHERE id=11;");
-
+			System.out.println("==============");
+            System.out.println("CAMBIANDO CIUDAD");
+            System.out.println("==============");
+            
+			String sql3 = "UPDATE owners SET city=? WHERE id=?;";
+			PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
 			preparedStatement3.setString(1, "Barcelona");
+            preparedStatement3.setInt(2, 11);
+            
 			preparedStatement3.executeUpdate();
 			preparedStatement3.close();
 
-			System.out.println("-----CONSULTADO OWNERS------");
-
-			// Consulta
+	        System.out.println("==============");
+            System.out.println("CONSULTANDO OWNERS");
+            System.out.println("==============");
+            
+            String sql = "SELECT * FROM owners";
 			statement = connection.createStatement();
-			String sql = "SELECT * FROM owners";
 			ResultSet rs = statement.executeQuery(sql);
 
 			while (rs.next()) {
@@ -77,21 +85,33 @@ public class JDBCApplication {
 			}
 			rs.close();
 			
-			
-			System.out.println("-----CONSULTANDO NOMBRES------");
-			
-			/*String sql4 = "SELECT * FROM owners WHERE first_name=?";
-			
-			PreparedStatement preparedStatement4 = connection.prepareStatement(sql4);
-			preparedStatement4.setString(1, "Bartolome");
-			
-			ResultSet rs4 = preparedStatement4.executeQuery(sql4);
-			rs4.next();
-			
-			//System.out.println("PERSONA conincidentes: " + rs4.getNString("first_name"));
-			rs4.close();*/
-			
-			System.out.println("-----RETO5------");
+			System.out.println("==============");
+            System.out.println("-CONSULTANDO NOMBRES-");
+            System.out.println("==============");			
+            
+            //Statement statementConsulta = connection.createStatement(); //FORMA2
+            String sql4 = "SELECT * FROM owners WHERE first_name=?"
+
+			PreparedStatement preparedStatementConsulta = connection.prepareStatement(sql4);
+            preparedStatementConsulta.setString(1, "Bartolome");
+			//ResultSet rs14 = statementConsulta.executeQuery(sql4); //FORMA2
+
+			ResultSet rs14 = preparedStatementConsulta.executeQuery();
+            
+			while (rs14.next()) {
+				// Obtener Campos
+				int id = rs14.getInt("id");
+				String name = rs14.getString("first_name");
+				String city = rs14.getString("city");
+				// Trato resultado
+				System.out.println("PERSONAS CON MISMO NOMBRE; ID: " + id + ", " + "Nombre: " + name);
+
+			}
+			rs14.close();
+         
+			System.out.println("==============");
+            System.out.println("-RETO 5 - CREAR OWNER EN JAVA, SETEAR MASCOTA E INSERTAR EN BBDD");
+            System.out.println("==============");
 			
             //CREANDO OWNER
 			Owner owner = new Owner();
