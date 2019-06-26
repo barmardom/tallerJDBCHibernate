@@ -93,6 +93,7 @@ public class JDBCApplication {
 			
 			System.out.println("-----RETO5------");
 			
+            //CREANDO OWNER
 			Owner owner = new Owner();
 			owner.setLastName("MD");
 			owner.setFirstName("Pepito");
@@ -101,9 +102,7 @@ public class JDBCApplication {
 			owner.setTelephone("6000000000");
 			
 			String sql5 = "INSERT INTO owners (first_name, last_name, address, city, telephone) VALUES (?, ?, ?, ?, ?)";
-	
 			PreparedStatement preparedStatement5 = connection.prepareStatement(sql5);
-
 			preparedStatement5.setString(1, owner.getFirstName());
 			preparedStatement5.setString(2, owner.getLastName());
 			preparedStatement5.setString(3, owner.getAddress());
@@ -113,20 +112,33 @@ public class JDBCApplication {
 			preparedStatement5.executeUpdate();
 			preparedStatement5.close();
 			
+            //CREANDO TIPO PET
 			PetType type = new PetType();
 			type.setName("Yorsike");
 			
+            //CREANDO PET
 			Pet pet = new Pet();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ii:ss");
-			String stringFechaConHora = "2014-09-15 15:03:23";
-			//Date fecha = sdf.parse(stringFechaConHora);
+			//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ii:ss");
+			//String stringFechaConHora = "2014-09-15 15:03:23";
+            //Date fecha = sdf.parse(stringFechaConHora);
+
+            Date date = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
 					
-			//pet.setBirthDate(fecha);
+			pet.setBirthDate(date);
 			pet.setName("Rocky");
 			pet.setType(type);
-			
-			
-			
+            pet.setOwner(owner);
+            
+            String sql6 = "INSERT INTO pets (name, birth_date, type_id, owner_id) VALUES (?, ?, ?, ?)"
+			PreparedStatement preparedStatement6 = connection.prepareStatement(sql6);
+			preparedStatement6.setString(1, pet.getName());
+			preparedStatement6.setString(2, pet.getBirthDate());
+			preparedStatement6.setString(3, pet.getType());
+			preparedStatement6.setString(4, pet.getOwner());
+
+			preparedStatement6.executeUpdate();
+			preparedStatement6.close();
+          
 			/*
 			String sql4 = "SELECT * FROM owners WHERE id=?";
 			ResultSet rs4 = statement.executeQuery(sql4);
